@@ -1,12 +1,9 @@
-from django.contrib.auth.models import AbstractUser
-from django.core.handlers.wsgi import WSGIRequest
-from typing import Dict, Any, Union
-
-from .models import ToListMixin
+from typing import Dict, Any
+from .protocols import UserModelProtocol
 
 
-def get_base_context(request: WSGIRequest) -> Dict[str, Any]:
-    user: Union[AbstractUser, ToListMixin] = request.user
+def get_base_context(request: Any) -> Dict[str, Any]:
+    user: UserModelProtocol = request.user
 
     context = {
         'is_login': user.is_anonymous,

@@ -1,29 +1,30 @@
 from django.db import models
+from django.db.models import BaseManager
 from django.db.models.query import QuerySet
-from typing import Optional, List, Dict, Iterator, Any, TypeVar, Generic, Union
+from typing import Optional, List, Dict, Any, TypeVar, Union, Type, Protocol
 
-_Z = TypeVar("_Z")
+from .protocols import MixinModelProtocol
 
-
-class QueryType(Generic[_Z], QuerySet):
-    def __iter__(self) -> Iterator[_Z]:
-        pass
+QS = TypeVar('QS', BaseManager[Any], QuerySet[Any])
 
 
-class ToListMixin(models.Model):
+class ToDictMixin(MixinModelProtocol):
     def to_dict(self) -> Dict[str, Any]:
         return {
             "pk": self.pk
         }
 
+
+class ToListMixin(ToDictMixin):
     @classmethod
-    def to_list(cls: Union[models.Model, 'ToListMixin'],
-                base: Optional[QueryType[Union[models.Model, 'ToListMixin']]] = None,
+    def to_list(cls: Type['ToListMixin'],
+                base: Optional[QS] = None,
                 **kwargs) -> List[Dict[str, Any]]:
-        base_qs: QueryType[Union[models.Model, 'ToListMixin']] = cls.objects.all() if base is None else base
+
+        base_qs: Union[BaseManager[Any], QS] = cls.objects.all() if base is None else base
 
         try:
-            filtered: QueryType[Union[models.Model, 'ToListMixin']] = base_qs.filter(**kwargs)
+            filtered: Union[BaseManager[Any], QS] = base_qs.filter(**kwargs)
         except AttributeError as e:
             print(e)
             return []
