@@ -29,7 +29,5 @@ jobs:
       - name: mypy
         run: |
           source env/bin/activate
-          mypy config
-          mypy user
-          mypy core
-          mypy testsite
+          echo $(pwd)
+          mypy config user core testsite
