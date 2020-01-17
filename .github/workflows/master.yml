@@ -18,9 +18,10 @@ jobs:
           python-version: 3.7
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m venv env && source env/bin/activate
+          pip install --upgrade pip
           pip install -r requirements.txt
-      - name: setup django settings
+      - name: Django Migrate Apps
         run: |
           python manage.py makemigrations user core testsite
           python manage.py migrate
@@ -30,7 +31,3 @@ jobs:
           mypy user
           mypy core
           mypy testsite
-#      - name: Test with pytest
-#        run: |
-#          pip install pytest
-#          pytest
