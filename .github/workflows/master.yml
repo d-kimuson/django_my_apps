@@ -23,10 +23,12 @@ jobs:
           pip install -r requirements.txt
       - name: Django Migrate Apps
         run: |
+          source env/bin/activate
           python manage.py makemigrations user core testsite
           python manage.py migrate
       - name: mypy
         run: |
+          source env/bin/activate
           mypy config
           mypy user
           mypy core
