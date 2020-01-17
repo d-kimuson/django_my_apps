@@ -3,12 +3,14 @@ from django.db.models.query import QuerySet
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Type
 
 from core.models import ToListMixin
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager[Any]):
+    _db: Any
+
     def create_user(self, email: str, password: str) -> 'User':
         user = User(
             email=BaseUserManager.normalize_email(email),
@@ -28,18 +30,18 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin, ToListMixin):
-    email = models.EmailField(
+    email: models.EmailField[str, str] = models.EmailField(
         unique=True,
         blank=False
     )
-    password = models.CharField(
+    password: models.CharField[str, str] = models.CharField(
         _('password'),
         max_length=128
     )
-    is_staff = models.BooleanField(
+    is_staff: models.BooleanField[bool, bool] = models.BooleanField(
         default=False
     )
-    is_superuser = models.BooleanField(
+    is_superuser: models.BooleanField[bool, bool] = models.BooleanField(
         default=False
     )
 
