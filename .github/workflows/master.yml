@@ -20,6 +20,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: setup django settings
+        - python manage.py makemigrations user core testsite
+        - python manage.py migrate
       - name: mypy
         run: |
           mypy config
