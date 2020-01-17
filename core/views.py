@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from .protocols import UserModelProtocol
+from .model_modules import UserModelProtocol
 
 
 def get_base_context(request: Any) -> Dict[str, Any]:
